@@ -15,7 +15,10 @@ build:
 golangci-lint:
 	@sh -c "'$(CURDIR)/scripts/golangci_lint_check.sh'"
 
-.PHONY: rendered-manifest.yaml golangci-lint
+unit-tests:
+	@sh -c "'$(CURDIR)/scripts/unit_tests.sh'"
+
+.PHONY: rendered-manifest.yaml golangci-lint unit-tests
 rendered-manifest.yaml:
 	helm template \
 	    --name cert-manager-webhook-selectel \
