@@ -30,7 +30,7 @@ type: Opaque
 stringData:
   key: APITOKEN_FROM_MY_SELECTEL_RU
 ---
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: certmanager.io/v1alpha1
 kind: Issuer
 metadata:
   name: letsencrypt-staging
@@ -62,7 +62,7 @@ spec:
 And then you can issue a cert:
 
 ```yaml
-apiVersion: certmanager.k8s.io/v1alpha1
+apiVersion: certmanager.io/v1alpha1
 kind: Certificate
 metadata:
   name: sel-letsencrypt-crt

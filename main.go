@@ -9,7 +9,7 @@ import (
 
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
-	certMgrV1 "github.com/jetstack/cert-manager/pkg/apis/certmanager/v1alpha1"
+	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
 	"github.com/selectel/cert-manager-webhook-selectel/selectel"
 	extAPI "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -17,13 +17,16 @@ import (
 	"k8s.io/client-go/rest"
 )
 
-const providerName = "selectel"
+const (
+	providerName = "selectel"
 
-var groupName = os.Getenv("GROUP_NAME")
+	groupNameEnvVar = "GROUP_NAME"
+)
 
 func main() {
+	groupName := os.Getenv("GROUP_NAME")
 	if groupName == "" {
-		panic("GROUP_NAME must be specified")
+		panic(fmt.Sprintf("%s must be specified", groupNameEnvVar))
 	}
 
 	// This will register our custom DNS provider with the webhook serving
@@ -47,7 +50,7 @@ type selectelDNSProviderSolver struct {
 // selectelDNSProviderConfig is a structure that is used to decode into when
 // solving a DNS01 challenge.
 type selectelDNSProviderConfig struct {
-	APIKeySecretRef certMgrV1.SecretKeySelector `json:"apiKeySecretRef"`
+	APIKeySecretRef cmmeta.SecretKeySelector `json:"apiKeySecretRef"`
 
 	// +optional
 	TTL int `json:"ttl"`
