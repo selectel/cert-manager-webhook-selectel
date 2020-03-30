@@ -9,8 +9,8 @@ import (
 
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
-	cmmeta "github.com/jetstack/cert-manager/pkg/apis/meta/v1"
 	"github.com/selectel/cert-manager-webhook-selectel/selectel"
+	coreV1 "k8s.io/api/core/v1"
 	extAPI "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
@@ -50,7 +50,7 @@ type selectelDNSProviderSolver struct {
 // selectelDNSProviderConfig is a structure that is used to decode into when
 // solving a DNS01 challenge.
 type selectelDNSProviderConfig struct {
-	APIKeySecretRef cmmeta.SecretKeySelector `json:"apiKeySecretRef"`
+	APIKeySecretRef coreV1.SecretKeySelector `json:"apiKeySecretRef"`
 
 	// +optional
 	TTL int `json:"ttl"`

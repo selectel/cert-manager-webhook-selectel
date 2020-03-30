@@ -1,4 +1,6 @@
-# Selectel DNS cert-manager ACME webhook
+# cert-manager-webhook-selectel
+
+Cert-manager ACME DNS webhook provider for Selectel.
 
 ## Installing
 
