@@ -32,39 +32,39 @@ type: Opaque
 stringData:
   key: APITOKEN_FROM_MY_SELECTEL_RU
 ---
-apiVersion: certmanager.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Issuer
 metadata:
   name: letsencrypt-staging
+  namespace: default
 spec:
   acme:
-    email: certmaster@selectel.ru
     server: https://acme-staging-v02.api.letsencrypt.org/directory
+    email: certmaster@selectel.ru
     privateKeySecretRef:
       name: letsencrypt-staging-account-key
-    dns01:
-      providers:
-        - name: selectel
-          webhook:
-            groupName: acme.selectel.ru
-            solverName: selectel
-            config:
-              apiKeySecretRef:
-                name: selectel-api-key
-                key: token
+    solvers:
+    - dns01:
+        webhook:
+          groupName: acme.selectel.ru
+          solverName: selectel
+          config:
+            apiKeySecretRef:
+              name: selectel-api-key
+              key: token
 
-              # Optional config, shown with default values
-              #   all times in seconds
-              ttl: 120
-              timeout: 30
-              propagationTimeout: 120
-              pollingInterval: 2
+            # Optional config, shown with default values
+            #   all times in seconds
+            ttl: 120
+            timeout: 30
+            propagationTimeout: 120
+            pollingInterval: 2
 ```
 
 And then you can issue a cert:
 
 ```yaml
-apiVersion: certmanager.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: sel-letsencrypt-crt
@@ -72,20 +72,12 @@ metadata:
 spec:
   secretName: example-com-tls
   commonName: example.com
-  dnsNames:
-  - example.com
-  - www.example.com
   issuerRef:
     name: letsencrypt-staging
     kind: Issuer
-  acme:
-    config:
-      - dns01:
-          provider: selectel
-        domains:
-          - example.com
-          - www.example.com
-
+  dnsNames:
+  - example.com
+  - www.example.com
 ```
 
 ## Development
