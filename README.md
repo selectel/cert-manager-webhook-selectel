@@ -64,7 +64,7 @@ spec:
 And then you can issue a cert:
 
 ```yaml
-apiVersion: certmanager.io/v1alpha1
+apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
 metadata:
   name: sel-letsencrypt-crt
@@ -72,20 +72,12 @@ metadata:
 spec:
   secretName: example-com-tls
   commonName: example.com
-  dnsNames:
-  - example.com
-  - www.example.com
   issuerRef:
     name: letsencrypt-staging
     kind: Issuer
-  acme:
-    config:
-      - dns01:
-          provider: selectel
-        domains:
-          - example.com
-          - www.example.com
-
+  dnsNames:
+  - example.com
+  - www.example.com
 ```
 
 ## Development
