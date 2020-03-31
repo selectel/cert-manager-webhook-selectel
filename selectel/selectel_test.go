@@ -2,130 +2,52 @@ package selectel
 
 import (
 	"fmt"
+	"os"
 	"testing"
-	"time"
 
-	"github.com/go-acme/lego/v3/platform/tester"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
-var envTest = tester.NewEnvTest(apiTokenEnvVar, ttlEnvVar)
-
 func TestNewDNSProvider(t *testing.T) {
-	testCases := []struct {
-		desc     string
-		envVars  map[string]string
-		expected string
-	}{
-		{
-			desc: "success",
-			envVars: map[string]string{
-				apiTokenEnvVar: "123",
-			},
-		},
-		{
-			desc: "missing api key",
-			envVars: map[string]string{
-				apiTokenEnvVar: "",
-			},
-			expected: fmt.Sprintf("selectel: some credentials information are missing: %s",
-				apiTokenEnvVar),
-		},
-	}
+	testToken := "123"
 
-	for _, test := range testCases {
-		t.Run(test.desc, func(t *testing.T) {
-			defer envTest.RestoreEnv()
-			envTest.ClearEnv()
+	assert.NoError(t, os.Setenv(apiTokenEnvVar, testToken))
+	defer os.Unsetenv(apiTokenEnvVar)
 
-			envTest.Apply(test.envVars)
+	p, err := NewDNSProvider()
+	assert.NoError(t, err)
+	assert.NotNil(t, p.config)
+	assert.NotNil(t, p.client)
+	assert.Equal(t, p.config.Token, testToken)
+}
 
-			p, err := NewDNSProvider()
+func TestNewDNSProvider_NoAPIKey(t *testing.T) {
+	assert.NoError(t, os.Setenv(apiTokenEnvVar, ""))
+	defer os.Unsetenv(apiTokenEnvVar)
 
-			if len(test.expected) == 0 {
-				require.NoError(t, err)
-				require.NotNil(t, p)
-				assert.NotNil(t, p.config)
-				assert.NotNil(t, p.client)
-			} else {
-				require.EqualError(t, err, test.expected)
-			}
-		})
+	_, err := NewDNSProvider()
+	if assert.Error(t, err) {
+		assert.EqualError(t, err, fmt.Sprintf("selectel: %s is missing", apiTokenEnvVar))
 	}
 }
 
-func TestNewDNSProviderConfig(t *testing.T) {
-	testCases := []struct {
-		desc     string
-		token    string
-		ttl      int
-		expected string
-	}{
-		{
-			desc:  "success",
-			token: "123",
-			ttl:   60,
-		},
-		{
-			desc:     "missing api key",
-			token:    "",
-			ttl:      60,
-			expected: "selectel: credentials missing",
-		},
-		{
-			desc:  "bad TTL value",
-			token: "123",
-			ttl:   59,
-			expected: fmt.Sprintf("selectel: invalid TTL, TTL (59) must be greater than %d",
-				minTTL),
-		},
-	}
-
-	for _, test := range testCases {
-		t.Run(test.desc, func(t *testing.T) {
-			config := NewDefaultConfig()
-			config.TTL = test.ttl
-			config.Token = test.token
-
-			p, err := NewDNSProviderConfig(config)
-
-			if len(test.expected) == 0 {
-				require.NoError(t, err)
-				require.NotNil(t, p)
-				assert.NotNil(t, p.config)
-				assert.NotNil(t, p.client)
-			} else {
-				require.EqualError(t, err, test.expected)
-			}
-		})
+func TestNewDNSProviderConfig_NoConfig(t *testing.T) {
+	_, err := NewDNSProviderConfig(nil)
+	if assert.Error(t, err) {
+		assert.EqualError(t, err, fmt.Sprintf("selectel: %s", errConfigAbsent))
 	}
 }
 
-func TestLivePresent(t *testing.T) {
-	if !envTest.IsLiveTest() {
-		t.Skip("skipping live test")
+func TestNewDNSProviderConfig_BadTTL(t *testing.T) {
+	testTTL := 59
+	testAPIKey := "123"
+	config := NewDefaultConfig()
+	config.TTL = testTTL
+	config.Token = testAPIKey
+
+	_, err := NewDNSProviderConfig(config)
+	if assert.Error(t, err) {
+		assert.EqualError(t, err,
+			fmt.Sprintf("selectel: invalid TTL, TTL (%d) must be greater than %d", testTTL, minTTL))
 	}
-
-	envTest.RestoreEnv()
-	provider, err := NewDNSProvider()
-	require.NoError(t, err)
-
-	err = provider.Present(envTest.GetDomain(), "123d==")
-	require.NoError(t, err)
-}
-
-func TestLiveCleanUp(t *testing.T) {
-	if !envTest.IsLiveTest() {
-		t.Skip("skipping live test")
-	}
-
-	envTest.RestoreEnv()
-	provider, err := NewDNSProvider()
-	require.NoError(t, err)
-
-	time.Sleep(2 * time.Second)
-
-	err = provider.CleanUp(envTest.GetDomain(), "123d==")
-	require.NoError(t, err)
 }
