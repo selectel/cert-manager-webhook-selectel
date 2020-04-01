@@ -1,0 +1,10 @@
+linters:
+  fast: false
+  enable-all: true
+  disable:
+    - bodyclose
+    - dupl
+    - gochecknoglobals
+    - gosec
+    - lll
+    - wsl

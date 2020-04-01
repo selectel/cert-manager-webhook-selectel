@@ -76,7 +76,6 @@ func (c *selectelDNSProviderSolver) validate(cfg *selectelDNSProviderConfig) err
 
 func (c *selectelDNSProviderSolver) provider(cfg *selectelDNSProviderConfig,
 	namespace string) (*selectel.DNSProvider, error) {
-
 	if err := c.validate(cfg); err != nil {
 		return nil, err
 	}
