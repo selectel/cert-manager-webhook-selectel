@@ -1,4 +1,6 @@
 # cert-manager-webhook-selectel
+[![Build Status](https://travis-ci.org/selectel/cert-manager-webhook-selectel.svg?branch=master)](https://travis-ci.org/selectel/cert-manager-webhook-selectel)
+[![Go Report Card](https://goreportcard.com/badge/github.com/selectel/cert-manager-webhook-selectel)](https://goreportcard.com/report/github.com/selectel/cert-manager-webhook-selectel)
 
 Cert-manager ACME DNS webhook provider for Selectel.
 
