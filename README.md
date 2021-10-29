@@ -11,7 +11,7 @@ To install with helm, run:
 ```bash
 $ git clone https://github.com/selectel/cert-manager-webhook-selectel.git
 $ cd cert-manager-webhook-selectel/deploy/cert-manager-webhook-selectel
-$ helm install --name cert-manager-webhook-selectel .
+$ helm install --name cert-manager-webhook-selectel . --set groupName acme.selectel.ru
 ```
 
 Without helm, run:
@@ -34,7 +34,7 @@ type: Opaque
 stringData:
   key: APITOKEN_FROM_MY_SELECTEL_RU
 ---
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: letsencrypt-staging
@@ -66,7 +66,7 @@ spec:
 And then you can issue a cert:
 
 ```yaml
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: sel-letsencrypt-crt
