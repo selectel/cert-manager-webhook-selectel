@@ -92,6 +92,5 @@ You can run the test suite with:
 2. Fill in the appropriate values in `testdata/selectel/apikey.yml` and `testdata/selectel/config.json` 
 
 ```bash
-$ ./scripts/fetch-test-binaries.sh
-$ TEST_ZONE_NAME=example.com. go test .
+$ TEST_ZONE_NAME=example.com. make test
 ```
