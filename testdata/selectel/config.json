@@ -1,7 +1,0 @@
-{
-    "apiKeySecretRef": {
-        "name": "selectel-api-token",
-        "key": "token"
-    },
-    "ttl": 60
-}
