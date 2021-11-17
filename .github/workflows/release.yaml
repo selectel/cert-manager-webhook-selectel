@@ -2,8 +2,8 @@ name: Release Dockerimage/Chart
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - "v*.*.*"
 
 env:
   REGISTRY: ghcr.io
@@ -41,7 +41,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  release:
+  release-helm-chart:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
