@@ -159,7 +159,6 @@ func (c *selectelDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error
 
 	// Load environment variables and create new Selectel DNS provider
 	provider, err := c.provider(&cfg, ch.ResourceNamespace)
-
 	if err != nil {
 		return err
 	}
