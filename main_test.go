@@ -7,10 +7,8 @@ import (
 	"github.com/jetstack/cert-manager/test/acme/dns"
 )
 
-const (
-	testZoneNameEnvVar = "TEST_ZONE_NAME"
-	manifestPath       = "testdata/selectel"
-	kubeBuilderBinPath = "./_out/kubebuilder/bin"
+var (
+	zone = os.Getenv("TEST_ZONE_NAME")
 )
 
 func TestRunsSuite(t *testing.T) {
@@ -18,10 +16,9 @@ func TestRunsSuite(t *testing.T) {
 	// snippet of valid configuration that should be included on the
 	// ChallengeRequest passed as part of the test cases.
 	fixture := dns.NewFixture(&selectelDNSProviderSolver{},
-		dns.SetBinariesPath(kubeBuilderBinPath),
-		dns.SetResolvedZone(os.Getenv(testZoneNameEnvVar)),
+		dns.SetResolvedZone(zone),
 		dns.SetAllowAmbientCredentials(false),
-		dns.SetManifestPath(manifestPath),
+		dns.SetManifestPath("testdata/selectel"),
 		dns.SetStrict(true),
 	)
 	fixture.RunConformance(t)
