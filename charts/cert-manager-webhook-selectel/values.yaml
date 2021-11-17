@@ -13,8 +13,8 @@ certManager:
   serviceAccountName: cert-manager
 
 image:
-  repository: selectel/cert-manager-webhook-selectel
-  tag: latest
+  repository: ghcr.io/selectel/cert-manager-webhook-selectel
+  tag: v1.2.0
   pullPolicy: Always
 
 nameOverride: ""
