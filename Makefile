@@ -38,10 +38,13 @@ clean-kubebuilder:
 build:
 	docker build -t $(IMAGE_NAME):$(IMAGE_TAG) .
 
-golangci-lint:
+vendor:
+	go mod vendor
+
+golangci-lint: vendor
 	@sh -c "'$(CURDIR)/scripts/golangci_lint_check.sh'"
 
-unit-tests:
+unit-tests: vendor
 	@sh -c "'$(CURDIR)/scripts/unit_tests.sh'"
 
 .PHONY: rendered-manifest.yaml golangci-lint unit-tests
