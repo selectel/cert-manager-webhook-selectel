@@ -1,0 +1,13 @@
+.editorconfig
+.git
+AUTHORS.md
+CONTRIBUTING.md
+LICENSE
+Makefile
+README.md
+deploy/
+vendor/
+testdata/
+scripts/
+_test/
+_out/

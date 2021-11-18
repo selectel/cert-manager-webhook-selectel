@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -11,7 +12,7 @@ import (
 	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
 	"github.com/selectel/cert-manager-webhook-selectel/selectel"
 	coreV1 "k8s.io/api/core/v1"
-	extAPI "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1beta1"
+	extAPI "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
 	metaV1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -82,7 +83,7 @@ func (c *selectelDNSProviderSolver) provider(cfg *selectelDNSProviderConfig,
 
 	sec, err := c.client.CoreV1().
 		Secrets(namespace).
-		Get(cfg.APIKeySecretRef.LocalObjectReference.Name, metaV1.GetOptions{})
+		Get(context.Background(), cfg.APIKeySecretRef.LocalObjectReference.Name, metaV1.GetOptions{})
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +159,6 @@ func (c *selectelDNSProviderSolver) CleanUp(ch *v1alpha1.ChallengeRequest) error
 
 	// Load environment variables and create new Selectel DNS provider
 	provider, err := c.provider(&cfg, ch.ResourceNamespace)
-
 	if err != nil {
 		return err
 	}

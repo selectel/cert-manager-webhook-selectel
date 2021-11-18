@@ -9,9 +9,17 @@ Cert-manager ACME DNS webhook provider for Selectel.
 To install with helm, run:
 
 ```bash
+$ helm repo add selectel https://selectel.github.io/cert-manager-webhook-selectel
+$ helm repo update
+$ helm install --name cert-manager-webhook-selectel selectel/cert-manager-webhook-selectel
+```
+
+OR
+
+```bash
 $ git clone https://github.com/selectel/cert-manager-webhook-selectel.git
 $ cd cert-manager-webhook-selectel/deploy/cert-manager-webhook-selectel
-$ helm install --name cert-manager-webhook-selectel . --set groupName acme.selectel.ru
+$ helm install --name cert-manager-webhook-selectel .
 ```
 
 Without helm, run:
@@ -92,6 +100,5 @@ You can run the test suite with:
 2. Fill in the appropriate values in `testdata/selectel/apikey.yml` and `testdata/selectel/config.json` 
 
 ```bash
-$ ./scripts/fetch-test-binaries.sh
-$ TEST_ZONE_NAME=example.com. go test .
+$ TEST_ZONE_NAME=example.com. make test
 ```
