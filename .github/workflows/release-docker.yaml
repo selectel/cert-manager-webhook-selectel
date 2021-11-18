@@ -1,4 +1,4 @@
-name: Release Dockerimage/Chart
+name: Release Dockerimage
 
 on:
   push:
