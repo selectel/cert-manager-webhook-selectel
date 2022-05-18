@@ -16,6 +16,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: {{ include "cert-manager-webhook-selectel.fullname" . }}
+  namespace: {{ .Values.certManager.namespace }}
   labels:
     app: {{ include "cert-manager-webhook-selectel.name" . }}
     chart: {{ include "cert-manager-webhook-selectel.chart" . }}
@@ -36,6 +37,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: {{ include "cert-manager-webhook-selectel.fullname" . }}
+  namespace: {{ .Values.certManager.namespace }}
   labels:
     app: {{ include "cert-manager-webhook-selectel.name" . }}
     chart: {{ include "cert-manager-webhook-selectel.chart" . }}

@@ -70,6 +70,7 @@ func NewClient(opts ClientOpts) *Client {
 // no such domain on the account - it'll recursively search for the first
 // which is exists in Selectel Domain API.
 func (c *Client) GetDomainByName(domainName string) (*Domain, error) {
+	if domainName[len(domainName)-1:] == "." { domainName = domainName[:len(domainName)-1] }
 	uri := fmt.Sprintf("/%s", domainName)
 	req, err := c.newRequest(http.MethodGet, uri, nil)
 	if err != nil {
