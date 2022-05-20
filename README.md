@@ -40,7 +40,7 @@ metadata:
   name: selectel-api-key
 type: Opaque
 stringData:
-  key: APITOKEN_FROM_MY_SELECTEL_RU
+  token: APITOKEN_FROM_MY_SELECTEL_RU
 ---
 apiVersion: cert-manager.io/v1
 kind: Issuer
