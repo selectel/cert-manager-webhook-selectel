@@ -14,7 +14,7 @@ certManager:
 
 image:
   repository: ghcr.io/selectel/cert-manager-webhook-selectel
-  tag: v1.2.0
+  tag: v1.2.3
   pullPolicy: Always
 
 nameOverride: ""

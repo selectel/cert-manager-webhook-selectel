@@ -97,7 +97,7 @@ spec:
 You can run the test suite with:
 
 1. Go to `https://my.selectel.ru/profile/apikeys`, get one or create new api token
-2. Fill in the appropriate values in `testdata/selectel/apikey.yml` and `testdata/selectel/config.json` 
+2. Fill in the appropriate values in `testdata/selectel/apikey.yml` and `testdata/selectel/config.json`
 
 ```bash
 $ TEST_ZONE_NAME=example.com. make test
