@@ -12,6 +12,8 @@ certManager:
   namespace: cert-manager
   serviceAccountName: cert-manager
 
+replicaCount: 1
+
 image:
   repository: ghcr.io/selectel/cert-manager-webhook-selectel
   tag: v1.2.0
@@ -20,9 +22,14 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
+extraEnv: []
+# - name: SOME_VAR
+#   value: "some value"
+
 service:
   type: ClusterIP
   port: 443
+  annotations: {}
 
 resources: {}
 # limits:
@@ -31,6 +38,8 @@ resources: {}
 # requests:
 #  cpu: 100m
 #  memory: 128Mi
+
+podAnnotations: {}
 
 nodeSelector: {}
 
