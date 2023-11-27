@@ -34,9 +34,6 @@ $ make rendered-manifest.yaml
 $ kubectl apply -f _out/rendered-manifest.yaml
 ```
 
-> [!IMPORTANT]  
-> If you want install cert-manager-webhook-selectel in namespace: default or other (not namespace: cert-manager) replace RoleBinding to ClusterRoleBinding where `"metadata.name": {{ include "cert-manager-webhook-selectel.fullname" . }}` and replace Role to ClusterRole where `"metadata.name": {{ include "cert-manager-webhook-selectel.fullname" . }}`.
-
 ### Issuer/ClusterIssuer
 
 An example issuer:
