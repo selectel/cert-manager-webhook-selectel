@@ -22,17 +22,12 @@ $ cd cert-manager-webhook-selectel/deploy/cert-manager-webhook-selectel
 $ helm install cert-manager-webhook-selectel . -n cert-manager
 ```
 
-Without helm, run:
+<!-- Without helm, run: -->
 
-<!-- TODO: it not works. Check it.  -->
-<!-- kubectl apply -f ~/projects/dchudik/cert-manager-webhook-selectel/_out/rendered-manifest.yaml -n cert-manager -->
-<!-- error: the namespace from the provided object "kube-system" does not match the namespace "cert-manager". You must pass '--namespace=kube-system' to perform this operation.
- -->
-
-```bash
+<!-- ```bash
 $ make rendered-manifest.yaml
 $ kubectl apply -f _out/rendered-manifest.yaml
-```
+``` -->
 
 ### Issuer/ClusterIssuer
 
