@@ -1,4 +1,4 @@
-FROM golang:1.17.3-alpine AS build
+FROM golang:1.20.3-alpine AS build
 RUN apk add --no-cache git
 WORKDIR /workspace
 ENV GO111MODULE=on
