@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/jetstack/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
-	"github.com/jetstack/cert-manager/pkg/acme/webhook/cmd"
+	"github.com/cert-manager/cert-manager/pkg/acme/webhook/apis/acme/v1alpha1"
+	"github.com/cert-manager/cert-manager/pkg/acme/webhook/cmd"
 	"github.com/selectel/cert-manager-webhook-selectel/selectel"
 	coreV1 "k8s.io/api/core/v1"
 	extAPI "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
