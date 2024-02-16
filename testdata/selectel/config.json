@@ -1,7 +1,6 @@
 {
-    "apiKeySecretRef": {
-        "name": "selectel-api-token",
-        "key": "token"
+    "dnsSecretRef": {
+        "name": "selectel-dns-credentials"
     },
     "ttl": 60
 }

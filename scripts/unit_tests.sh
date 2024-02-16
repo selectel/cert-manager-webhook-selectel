@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 echo "==> Running unit tests..."
-GO111MODULE=on go test -mod=vendor -timeout=5m -v --count=1 ./selectel
+GO111MODULE=on go test -mod=vendor -timeout=5m -v --count=1 ./selectel/...
 if [[ $? -ne 0 ]]; then
     echo ""
     echo "Unit tests failed."
