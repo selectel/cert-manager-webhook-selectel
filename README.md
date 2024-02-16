@@ -96,13 +96,13 @@ To install with helm in namespace: cert-manager, run:
 ```bash
 $ helm repo add selectel https://selectel.github.io/cert-manager-webhook-selectel
 $ helm repo update
-$ helm install cert-manager-webhook-selectel selectel/cert-manager-webhook-selectel -n cert-manager --version 1.2.4
+$ helm install cert-manager-webhook-selectel selectel/cert-manager-webhook-selectel -n cert-manager --version 1.2.5
 ```
 
 OR
 
 ```bash
-$ git clone https://github.com/selectel/cert-manager-webhook-selectel.git --branch 1.2.4
+$ git clone https://github.com/selectel/cert-manager-webhook-selectel.git --branch cert-manager-webhook-selectel-1.2.5
 $ cd cert-manager-webhook-selectel/deploy/cert-manager-webhook-selectel
 $ helm install cert-manager-webhook-selectel . -n cert-manager
 ```
