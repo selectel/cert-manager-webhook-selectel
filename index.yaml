@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   cert-manager-webhook-selectel:
   - apiVersion: v1
+    appVersion: 1.2.5
+    created: "2024-02-16T13:50:13.830490872Z"
+    description: Selectel DNS cert-manager ACME webhook
+    digest: f2762d9311555dc026c5d6b578e127dde9ef5dbb1d8d02446672c53c9402b6c4
+    maintainers:
+    - email: izotikov@selectel.ru
+      name: andrsp
+      url: https://github.com/andrsp
+    name: cert-manager-webhook-selectel
+    urls:
+    - https://github.com/selectel/cert-manager-webhook-selectel/releases/download/cert-manager-webhook-selectel-1.2.5/cert-manager-webhook-selectel-1.2.5.tgz
+    version: 1.2.5
+  - apiVersion: v1
     appVersion: 1.2.0
     created: "2023-04-05T18:01:59.041012324Z"
     description: Selectel DNS cert-manager ACME webhook
