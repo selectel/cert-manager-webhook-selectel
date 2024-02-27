@@ -8,3 +8,18 @@ linters:
     - gosec
     - lll
     - wsl
+    - depguard
+    - testpackage
+    - exhaustruct
+    - tagliatelle
+    # Disbale deprecated linters
+    - interfacer
+    - ifshort
+    - structcheck
+    - maligned
+    - scopelint 
+    - deadcode
+    - nosnakecase
+    - golint
+    - varcheck
+    - exhaustivestruct
