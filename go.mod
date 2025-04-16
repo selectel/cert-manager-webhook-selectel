@@ -1,6 +1,6 @@
 module github.com/selectel/cert-manager-webhook-selectel
 
-go 1.20
+go 1.24
 
 require (
 	github.com/cert-manager/cert-manager v1.14.1
@@ -8,6 +8,7 @@ require (
 	github.com/selectel/domains-go v1.0.2
 	github.com/selectel/go-selvpcclient/v3 v3.1.1
 	github.com/stretchr/testify v1.8.4
+	golang.org/x/net v0.19.0
 	k8s.io/api v0.29.1
 	k8s.io/apiextensions-apiserver v0.29.0
 	k8s.io/apimachinery v0.29.1
@@ -89,7 +90,6 @@ require (
 	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/exp v0.0.0-20231226003508-02704c960a9b // indirect
 	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
 	golang.org/x/oauth2 v0.15.0 // indirect
 	golang.org/x/sync v0.5.0 // indirect
 	golang.org/x/sys v0.16.0 // indirect

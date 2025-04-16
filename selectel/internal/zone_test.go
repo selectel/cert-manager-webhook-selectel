@@ -8,6 +8,7 @@ import (
 	domainsV2 "github.com/selectel/domains-go/pkg/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type mockedDNSv2ClientZones struct {
@@ -36,7 +37,7 @@ const (
 func TestGetZoneByNameWithoutOffset(t *testing.T) {
 	t.Parallel()
 	mDNSClient := new(mockedDNSv2ClientZones)
-	ctx := context.Background()
+	ctx := t.Context()
 	opts1 := &map[string]string{
 		"filter": testZoneName,
 		"limit":  "100",
@@ -60,7 +61,7 @@ func TestGetZoneByNameWithoutOffset(t *testing.T) {
 	mDNSClient.On("ListZones", ctx, opts1).Return(zonesWithoutOffset, nil)
 
 	zone, err := GetZoneByName(ctx, mDNSClient, testZoneName)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	assert.NotNil(t, zone)
 	assert.Equal(t, correctIDForSearch, zone.ID)
@@ -70,7 +71,7 @@ func TestGetZoneByNameWithoutOffset(t *testing.T) {
 func TestGetZoneByNameWithOffset(t *testing.T) {
 	t.Parallel()
 	mDNSClient := new(mockedDNSv2ClientZones)
-	ctx := context.Background()
+	ctx := t.Context()
 	nextOffset := 3
 	opts1 := &map[string]string{
 		"filter": testZoneName,
@@ -107,7 +108,7 @@ func TestGetZoneByNameWithOffset(t *testing.T) {
 	mDNSClient.On("ListZones", ctx, opts2).Return(zonesWithoutNextOffset, nil)
 
 	zone, err := GetZoneByName(ctx, mDNSClient, testZoneName)
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	assert.NotNil(t, zone)
 	assert.Equal(t, correctIDForSearch, zone.ID)
