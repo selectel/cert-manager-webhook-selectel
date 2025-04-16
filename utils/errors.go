@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -21,8 +22,8 @@ func BuildErrFromValidator(validationErrors validator.ValidationErrors) error {
 		preparedErrors = append(preparedErrors, preparedError)
 	}
 
-	//nolint: goerr113
-	return fmt.Errorf(strings.Join(preparedErrors, "; "))
+	//nolint: err113
+	return errors.New(strings.Join(preparedErrors, "; "))
 }
 
 func JSONFieldNameForValidator(fld reflect.StructField) string {

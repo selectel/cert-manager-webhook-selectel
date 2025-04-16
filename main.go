@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
@@ -28,14 +29,14 @@ const (
 var (
 	// use a single instance of Validate, it caches struct info.
 	validate              *validator.Validate = validator.New(validator.WithRequiredStructEnabled())
-	errSecretNameNotSetup                     = fmt.Errorf("secret name not setup")
-	errConvertToValidator                     = fmt.Errorf("convert to validator")
+	errSecretNameNotSetup                     = errors.New("secret name not setup")
+	errConvertToValidator                     = errors.New("convert to validator")
 )
 
 func main() {
 	groupName := os.Getenv("GROUP_NAME")
 	if groupName == "" {
-		panic(fmt.Sprintf("%s must be specified", groupNameEnvVar))
+		panic(groupNameEnvVar + " must be specified")
 	}
 	// This will register our custom DNS provider with the webhook serving
 	// library, making it available as an API under the provided groupName.

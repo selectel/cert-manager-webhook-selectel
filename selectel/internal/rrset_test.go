@@ -2,13 +2,14 @@ package internal
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"strconv"
 	"testing"
 
 	domainsV2 "github.com/selectel/domains-go/pkg/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type mockedDNSv2ClientRRSets struct {
@@ -16,7 +17,7 @@ type mockedDNSv2ClientRRSets struct {
 	domainsV2.Client
 }
 
-var errConvertFirstArgInMock = fmt.Errorf("convert first arg")
+var errConvertFirstArgInMock = errors.New("convert first arg")
 
 func (client *mockedDNSv2ClientRRSets) ListRRSets(ctx context.Context, zoneID string, opts *map[string]string) (domainsV2.Listable[domainsV2.RRSet], error) {
 	args := client.Called(ctx, zoneID, opts)
@@ -35,7 +36,7 @@ func TestGetRrsetByNameAndTypeWithoutOffset(t *testing.T) {
 	rrsetTypeForSearch := "A"
 	mockedZoneID := "mocked-zone-id"
 	mDNSClient := new(mockedDNSv2ClientRRSets)
-	ctx := context.Background()
+	ctx := t.Context()
 	opts1 := &map[string]string{
 		"name":        testZoneName,
 		"rrset_types": rrsetTypeForSearch,
@@ -62,8 +63,7 @@ func TestGetRrsetByNameAndTypeWithoutOffset(t *testing.T) {
 	mDNSClient.On("ListRRSets", ctx, mockedZoneID, opts1).Return(rrsetWithoutOffset, nil)
 
 	rrset, err := GetRrsetByNameAndType(ctx, mDNSClient, mockedZoneID, testZoneName, rrsetTypeForSearch)
-
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	assert.NotNil(t, rrset)
 	assert.Equal(t, correctIDForSearch, rrset.ID)
@@ -76,7 +76,7 @@ func TestGetRrsetByNameAndTypeWithOffset(t *testing.T) {
 	rrsetTypeForSearch := "A"
 	mockedZoneID := "mocked-zone-id"
 	mDNSClient := new(mockedDNSv2ClientRRSets)
-	ctx := context.Background()
+	ctx := t.Context()
 	nextOffset := 3
 	opts1 := &map[string]string{
 		"name":        testZoneName,
@@ -117,8 +117,7 @@ func TestGetRrsetByNameAndTypeWithOffset(t *testing.T) {
 	mDNSClient.On("ListRRSets", ctx, mockedZoneID, opts2).Return(rrsetsWithoutNextOffset, nil)
 
 	rrset, err := GetRrsetByNameAndType(ctx, mDNSClient, mockedZoneID, testZoneName, rrsetTypeForSearch)
-
-	assert.NoError(t, err)
+	require.NoError(t, err)
 
 	assert.NotNil(t, rrset)
 	assert.Equal(t, correctIDForSearch, rrset.ID)
