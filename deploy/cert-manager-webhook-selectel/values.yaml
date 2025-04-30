@@ -46,3 +46,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+dnsConfig: {}
+
+dnsPolicy: {}
