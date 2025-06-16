@@ -94,6 +94,7 @@ spec:
             #   all times in seconds
             ttl: 120 # Default: 60
             timeout: 60 # Default 40
+            authUrl: "https://cloud.api.selcloud.ru/identity/v3"
 ```
 
 ### Issuing certificate

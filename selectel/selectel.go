@@ -31,6 +31,8 @@ type Config struct {
 	BaseURL           string            `json:"baseUrl"     validate:"required,gt=0"`
 	TTL               int               `json:"ttl"         validate:"required"`
 	HTTPTimeout       int               `json:"httpTimeout" validate:"required"`
+	AuthRegion        string         	`json:"authRegion"`    
+	AuthURL           string            `json:"authUrl"`    
 	CredentialsForDNS CredentialsForDNS `json:"-"`
 }
 
@@ -60,6 +62,8 @@ func NewConfigForDNS() (*Config, error) {
 		BaseURL:     defaultBaseURL,
 		TTL:         minTTL,
 		HTTPTimeout: defaultHTTPTimeout,
+		AuthRegion: "uz-1",
+		AuthURL:     "https://cloud.api.selcloud.ru/identity/v3", 
 	}
 
 	return cfg, nil
@@ -182,6 +186,8 @@ func getDNSClientFromConfig(config *Config) (domainsV2.DNSClient[domainsV2.Zone,
 		Username:   string(config.CredentialsForDNS.Username),
 		Password:   string(config.CredentialsForDNS.Password),
 		ProjectID:  string(config.CredentialsForDNS.ProjectID),
+		AuthURL:    config.AuthURL,
+		AuthRegion:	config.AuthRegion,
 	}
 
 	client, err := selvpcclient.NewClient(options)
