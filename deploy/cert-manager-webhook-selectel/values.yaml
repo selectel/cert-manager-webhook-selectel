@@ -13,11 +13,15 @@ certManager:
   serviceAccountName: cert-manager
 
 replicaCount: 1
+revisionHistoryLimit: 10
 
 image:
   repository: ghcr.io/selectel/cert-manager-webhook-selectel
   tag: v1.4.0
   pullPolicy: Always
+
+imagePullSecrets: []
+#  - private-registry
 
 nameOverride: ""
 fullnameOverride: ""
@@ -46,3 +50,22 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+securityContext:
+  fsGroupChangePolicy: Always
+  sysctls: []
+  supplementalGroups: []
+  fsGroup: 65534
+
+containerSecurityContext:
+  seLinuxOptions: {}
+  runAsUser: 65534
+  runAsGroup: 65534
+  runAsNonRoot: true
+  privileged: false
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: ["ALL"]
+  seccompProfile:
+    type: "RuntimeDefault"
