@@ -19,6 +19,8 @@ image:
   tag: v1.4.0
   pullPolicy: Always
 
+imagePullSecrets: []
+
 nameOverride: ""
 fullnameOverride: ""
 
@@ -46,3 +48,4 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
