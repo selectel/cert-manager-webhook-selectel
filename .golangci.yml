@@ -1,4 +1,6 @@
 version: "2"
+run:
+  timeout: 10m
 linters:
   default: all
   disable:
@@ -6,6 +8,7 @@ linters:
     - depguard
     - dupl
     - exhaustruct
+    - exhaustruct_v5
     - funcorder
     - gochecknoglobals
     - gosec
@@ -13,6 +16,14 @@ linters:
     - tagliatelle
     - testpackage
     - wsl
+    - wsl_v5
+    # New style checks are separate from this dependency update.
+    - embeddedstructfieldcheck
+    - godoclint
+    - noinlineerr
+  settings:
+    goconst:
+      ignore-tests: true
   exclusions:
     generated: lax
     presets:
