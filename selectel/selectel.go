@@ -193,6 +193,9 @@ func getDNSClientFromConfig(config *Config) (domainsV2.DNSClient[domainsV2.Zone,
 	hdrs := http.Header{}
 	hdrs.Add(headerForOSProjectToken, projectToken)
 	hdrs.Add("User-Agent", userAgent)
+	// domains-go sends the JSON body as is and sets no Content-Type. The DNS API rejects
+	// such create and update requests: "Input should be a valid dictionary or object".
+	hdrs.Set("Content-Type", "application/json")
 
 	httpClient := &http.Client{
 		Timeout: time.Duration(config.HTTPTimeout) * time.Second,
