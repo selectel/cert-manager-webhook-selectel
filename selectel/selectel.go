@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/selectel/cert-manager-webhook-selectel/selectel/internal"
@@ -69,6 +70,26 @@ func NewConfigForDNS() (*Config, error) {
 type DNSProvider struct {
 	config    *Config
 	dnsClient domainsV2.DNSClient[domainsV2.Zone, domainsV2.RRSet]
+
+	// locks serialises mutations of one record name inside this process.
+	//
+	// Present and CleanUp do a read-modify-write of the whole TXT RRset: they read
+	// the current records, add or drop their own value and write the full list back.
+	// cert-manager runs several challenges concurrently (--max-concurrent-challenges,
+	// 60 by default), and a Certificate with both example.com and *.example.com puts
+	// two challenges on the same name (_acme-challenge.example.com) — without the lock
+	// the last write wins and one of the two values disappears.
+	//
+	// A process-local lock is enough because the chart ships a single replica; a
+	// multi-replica deployment would need conditional updates on the API side.
+	locks sync.Map // map[string]*sync.Mutex, keyed by fqdn.
+}
+
+// lockFor returns the mutex guarding mutations of one record name.
+func (d *DNSProvider) lockFor(fqdn string) *sync.Mutex {
+	mu, _ := d.locks.LoadOrStore(fqdn, &sync.Mutex{})
+
+	return mu.(*sync.Mutex) //nolint:forcetypeassert // LoadOrStore stores exactly *sync.Mutex.
 }
 
 // NewDNSProviderFromConfig return a DNSProvider instance configured for selectel.
@@ -90,6 +111,10 @@ func NewDNSProviderFromConfig(config *Config) (*DNSProvider, error) {
 
 // Present creates a recor in TXT RRSet to fulfill DNS-01 challenge.
 func (d *DNSProvider) Present(zoneName, fqdn, value string) error {
+	mu := d.lockFor(fqdn)
+	mu.Lock()
+	defer mu.Unlock()
+
 	ctx := context.Background()
 	zone, err := internal.GetZoneByName(ctx, d.dnsClient, zoneName)
 	if err != nil {
@@ -113,23 +138,34 @@ func (d *DNSProvider) Present(zoneName, fqdn, value string) error {
 			Type: domainsV2.TXT,
 		}
 		_, err = d.dnsClient.CreateRRSet(ctx, zone.ID, createRrsetOpts)
+		if err == nil {
+			return nil
+		}
+		// The zone may already carry this RRSet: the cache can lag behind the API, and
+		// another process may have created it a moment ago. Re-read and append instead of
+		// failing the challenge on a transient 409.
+		rrset, err = internal.GetRrsetByNameAndType(ctx, d.dnsClient, zone.ID, fqdn, string(domainsV2.TXT))
 		if err != nil {
 			return fmt.Errorf("create new rrset: %w", err)
 		}
-	} else {
-		record := domainsV2.RecordItem{
-			Content: content,
+	}
+	record := domainsV2.RecordItem{
+		Content: content,
+	}
+	for _, existing := range rrset.Records {
+		if existing.Content == record.Content {
+			return nil // idempotent: the value is already published
 		}
-		rrset.Records = append(rrset.Records, record)
-		updateRrsetOpts := &domainsV2.RRSet{
-			TTL:     rrset.TTL,
-			Records: rrset.Records,
-			Type:    domainsV2.TXT,
-		}
-		err = d.dnsClient.UpdateRRSet(ctx, zone.ID, rrset.ID, updateRrsetOpts)
-		if err != nil {
-			return fmt.Errorf("added record to existsing rrset: %w", err)
-		}
+	}
+	rrset.Records = append(rrset.Records, record)
+	updateRrsetOpts := &domainsV2.RRSet{
+		TTL:     rrset.TTL,
+		Records: rrset.Records,
+		Type:    domainsV2.TXT,
+	}
+	err = d.dnsClient.UpdateRRSet(ctx, zone.ID, rrset.ID, updateRrsetOpts)
+	if err != nil {
+		return fmt.Errorf("added record to existsing rrset: %w", err)
 	}
 
 	return nil
@@ -137,6 +173,10 @@ func (d *DNSProvider) Present(zoneName, fqdn, value string) error {
 
 // CleanUp removes a record from TXT RRSet used for DNS-01 challenge.
 func (d *DNSProvider) CleanUp(zoneName, fqdn, value string) error {
+	mu := d.lockFor(fqdn)
+	mu.Lock()
+	defer mu.Unlock()
+
 	ctx := context.Background()
 	zone, err := internal.GetZoneByName(ctx, d.dnsClient, zoneName)
 	if err != nil {
